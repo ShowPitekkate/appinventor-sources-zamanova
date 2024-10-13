@@ -21,3 +21,4 @@ jobs:
         with:
           name: sources-ai
           path: ./
+          include-hidden-files: true
