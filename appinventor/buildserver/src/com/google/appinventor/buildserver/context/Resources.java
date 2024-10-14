@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Resources {
-  private final ConcurrentMap<String, File> resources;
+  private static final ConcurrentMap<String, File> RESOURCES = new ConcurrentHashMap<>();
   private final List<File> dexFiles;
 
   private String[] supportJars;
@@ -39,6 +39,7 @@ public class Resources {
   private static final String KAWA_RUNTIME = RUNTIME_FILES_DIR + "kawa.jar";
   private static final String SIMPLE_ANDROID_RUNTIME_JAR = RUNTIME_FILES_DIR + "AndroidRuntime.jar";
   private static final String DX_JAR = RUNTIME_TOOLS_DIR + "dx.jar";
+  private static final String D8_JAR = RUNTIME_TOOLS_DIR + "d8.jar";
   private static final String APKSIGNER_JAR = RUNTIME_TOOLS_DIR + "apksigner.jar";
 
   public static final String YAIL_RUNTIME = RUNTIME_FILES_DIR + "runtime.scm";
@@ -49,7 +50,6 @@ public class Resources {
   private static final String BUNDLETOOL_JAR = RUNTIME_TOOLS_DIR + "bundletool.jar";
 
   public Resources() {
-    resources = new ConcurrentHashMap<>();
     dexFiles = new ArrayList<>();
   }
 
@@ -59,40 +59,42 @@ public class Resources {
    * @param resourcePath the path to the desired resource
    * @return a path in the filesystem to the resource, or null if it is not found
    */
-  public synchronized String getResource(String resourcePath) {
-    try {
-      File file = resources.get(resourcePath);
-      if (file == null) {
-        String basename = PathUtil.basename(resourcePath);
-        StringBuilder prefix;
-        String suffix;
-        int lastDot = basename.lastIndexOf(".");
-        if (lastDot != -1) {
-          prefix = new StringBuilder(basename.substring(0, lastDot));
-          suffix = basename.substring(lastDot);
-        } else {
-          prefix = new StringBuilder(basename);
-          suffix = "";
+  public String getResource(String resourcePath) {
+    synchronized (RESOURCES) {
+      try {
+        File file = RESOURCES.get(resourcePath);
+        if (file == null) {
+          String basename = PathUtil.basename(resourcePath);
+          StringBuilder prefix;
+          String suffix;
+          int lastDot = basename.lastIndexOf(".");
+          if (lastDot != -1) {
+            prefix = new StringBuilder(basename.substring(0, lastDot));
+            suffix = basename.substring(lastDot);
+          } else {
+            prefix = new StringBuilder(basename);
+            suffix = "";
+          }
+          while (prefix.length() < 3) {
+            prefix.append("_");
+          }
+          file = File.createTempFile(prefix.toString(), suffix);
+          if (!file.setExecutable(true)) {
+            System.out.println("[WARN] Could not mark resources as executable: " + file);
+          }
+          file.deleteOnExit();
+          if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+            System.out.println("[WARN] Could not make directory: " + file.getParentFile());
+          }
+          Files.copy(com.google.common.io.Resources.newInputStreamSupplier(
+              Objects.requireNonNull(Compiler.class.getResource(resourcePath))), file);
+          RESOURCES.put(resourcePath, file);
         }
-        while (prefix.length() < 3) {
-          prefix.append("_");
-        }
-        file = File.createTempFile(prefix.toString(), suffix);
-        if (!file.setExecutable(true)) {
-          System.out.println("[WARN] Could not mark resources as executable: " + file);
-        }
-        file.deleteOnExit();
-        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-          System.out.println("[WARN] Could not make directory: " + file.getParentFile());
-        }
-        Files.copy(com.google.common.io.Resources.newInputStreamSupplier(
-            Objects.requireNonNull(Compiler.class.getResource(resourcePath))), file);
-        resources.put(resourcePath, file);
+        return file.getAbsolutePath();
+      } catch (IOException | NullPointerException e) {
+        System.out.println("[ERROR] " + e.getMessage());
+        return null;
       }
-      return file.getAbsolutePath();
-    } catch (IOException | NullPointerException e) {
-      System.out.println("[ERROR] " + e.getMessage());
-      return null;
     }
   }
 
@@ -130,6 +132,10 @@ public class Resources {
 
   public String getDxJar() {
     return getResource(DX_JAR);
+  }
+
+  public String getD8Jar() {
+    return getResource(D8_JAR);
   }
 
   public String getApksignerJar() {

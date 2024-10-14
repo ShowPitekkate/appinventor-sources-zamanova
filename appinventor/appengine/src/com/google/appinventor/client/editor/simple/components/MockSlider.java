@@ -219,6 +219,7 @@ public final class MockSlider extends MockVisibleComponent {
     }
 
   }
+//<<<<<<< zamanova-ui-redesign
 
   /*
    * We add the DesignPreviewChangeListener here instead of in the
@@ -230,4 +231,6 @@ public final class MockSlider extends MockVisibleComponent {
   protected void setContainer(MockContainer container) {
     super.setContainer(container);
   }
+//=======
+//>>>>>>> master
 }

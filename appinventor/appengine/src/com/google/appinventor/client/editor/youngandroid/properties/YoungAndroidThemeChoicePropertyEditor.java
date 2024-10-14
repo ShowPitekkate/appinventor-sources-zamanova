@@ -16,8 +16,8 @@ import com.google.appinventor.client.Ode;
  */
 public class YoungAndroidThemeChoicePropertyEditor extends ChoicePropertyEditor {
 
-  // Text alignment choices
-  private static final Choice[] textAlignments = new Choice[] {
+  // Theme choices
+  private static final Choice[] themes = new Choice[] {
     new Choice(MESSAGES.classicTheme(), "Classic"),
     new Choice(MESSAGES.defaultTheme(), "AppTheme.Light.DarkActionBar"),
     new Choice(MESSAGES.blackTitleTheme(), "AppTheme.Light"),
@@ -25,6 +25,14 @@ public class YoungAndroidThemeChoicePropertyEditor extends ChoicePropertyEditor 
   };
 
   public YoungAndroidThemeChoicePropertyEditor() {
+//<<<<<<< zamanova-ui-redesign
     super(textAlignments, false);
+//=======
+    super(themes);
+  }
+
+  public YoungAndroidThemeChoicePropertyEditor(String defaultValue) {
+    super(themes, defaultValue, true);
+//>>>>>>> master
   }
 }

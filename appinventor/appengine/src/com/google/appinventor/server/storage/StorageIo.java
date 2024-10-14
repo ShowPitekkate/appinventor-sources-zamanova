@@ -212,15 +212,6 @@ public interface StorageIo {
   String getProjectName(String userId, long projectId);
 
   /**
-   * Sets a project name.
-   *
-   * @param userId a user Id (the request is made on behalf of this user)
-   * @param projectId project id
-   * @param name new name
-   * */
-  void setProjectName(String userId, long projectId, String name);
-
-  /**
    * Returns the date the project was last modified.
    * @param userId a user Id (the request is made on behalf of this user)
    * @param projectId  project id
@@ -689,6 +680,8 @@ public interface StorageIo {
    * @return true on successful account deletion, otherwise false
    */
   boolean deleteAccount(String userId);
+
+  String getIosExtensionsConfig();
 
 }
 

@@ -41,6 +41,20 @@ body, html {
   margin: 0;
   min-width: 1024px;
   position: absolute;
+  min-height: 100vh;
+}
+
+/* Standardization of icon sizes to 16px */	
+.gwt-Tree img, .ode-Icon img, .ode-Icon-selected img {	
+  width: 16px;	
+  height: 16px;	
+}
+
+/* Needed for Safari to position comments correctly */
+body.blocklyMinimalBody {
+  min-width: auto;
+  min-height: auto;
+  position: inherit;
 }
 
 body {
@@ -64,6 +78,59 @@ body {
   margin: auto;
   padding: 16px;
   text-align: center;
+}
+
+.gwt-PushButton-up,
+.gwt-PushButton-up-hovering,
+.gwt-PushButton-up-disabled,
+.gwt-PushButton-down,
+.gwt-PushButton-down-hovering,
+.gwt-PushButton-down-disabled {
+  border: 1px solid;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 10px;
+  transition: background 0.2s, opacity 0.1s;
+  background-color: #A5CF47;
+  border-color: #444444;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.06em;
+  white-space: nowrap;
+}
+
+.gwt-ButtonLeft {
+  border-radius: 4px 0 0 4px;
+}
+
+.gwt-ButtonLeft {
+  border-radius: 4px 0 0 4px;
+}
+
+.gwt-ButtonRight {
+  border-radius: 0 4px 4px 0;
+}
+
+.gwt-ButtonCenter {
+  border-radius: 0;
+  border-width: 1px 0;
+}
+
+.gwt-PushButton-up-hovering {
+  background-color: #7D9D36;
+  border: unset;
+  filter: unset;
+}
+
+.gwt-PushButton-down-disabled {
+  border: unset;
+  filter: unset;
+}
+
+.gwt-RadioButton {
+  margin: 4px;
 }
 
 .ode-Root {
@@ -150,6 +217,10 @@ div.StatusPanel {
   /* TODO(opensource): Delete the background-image line below once we're ready */
   background-image: url(../images/watermark.png);
   margin: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.065);
+  flex-grow:1;
+  display: flex;
+  flex-flow: colum;
 }
 
 .ode-Box-header {
@@ -175,6 +246,13 @@ div.StatusPanel {
 
 .ode-Box-body-padding {
   padding: 6px;
+  flex-grow: 1;
+  display:flex;
+}
+
+.ode-Box-body-padding>* {
+  display: flex;
+  flex-grow: 1;
 }
 
 .ode-BoxResizeControl {
@@ -347,6 +425,13 @@ div.StatusPanel {
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f2f2f2), to(top-panel-background ));
   background-image: -webkit-linear-gradient(top, top-panel-background, top-panel-background );
   background-image: -o-linear-gradient(top, top-panel-background, top-panel-background );  */
+  align-items: center;
+  background-color: #f2f2f2;
+  background-image: -moz-linear-gradient(top, #f2f2f2, #f3f3f3);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f2f2f2), to(#f3f3f3));
+  background-image: -webkit-linear-gradient(top, #f2f2f2, #f3f3f3);
+  background-image: -o-linear-gradient(top, #f2f2f2, #f3f3f3);
+  background-image: linear-gradient(to bottom, #f2f2f2, #f3f3f3);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='background-color', endColorstr='top-panel-end-color', GradientType=0);
   *zoom: 1;
@@ -460,7 +545,7 @@ div.StatusPanel {
   /* -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box; */
   box-sizing: border-box;
-  padding: 4px 8px 8px;
+  padding: 4px 8px 0;
   position: relative;
   height: 100%;
   width: 100%;
@@ -472,7 +557,6 @@ div.StatusPanel {
   height: 100%;
   padding: 0;
   margin: 0;
-  overflow: hidden;
 }
 
 .ode-ProjectEditor {
@@ -504,6 +588,13 @@ div.StatusPanel {
 .ViewerBox {
   min-width: 368px;
   flex-grow: 1;
+  display: flex;
+  flex-flow: column;
+}
+
+.ode-SourceScrollPanel {
+  width: 200px;
+  height: 480px;
 }
 
 .ode-NavArrow {
@@ -585,6 +676,10 @@ div.StatusPanel {
 .gwt-TextBox {
   padding: 0;
   margin: 0;
+}
+
+.ode-SimpleMockComponent .gwt-PasswordTextBox {
+  box-sizing: border-box;
 }
 
 .gwt-Tree .gwt-TreeItem span * {
@@ -707,6 +802,38 @@ div.StatusPanel {
 
 /* Palette */
 
+.ode-CollapsablePanel .gwt-DisclosurePanel .header td:has(img) {
+  display: none;
+}
+
+.ode-CollapsablePanel .gwt-DisclosurePanel .header td {
+  color: #555;
+  font-size: 13px;
+  vertical-align: top;
+  font-weight: bold;
+}
+
+.ode-CollapsablePanel .gwt-DisclosurePanel .header {
+  border-top: 1px solid #d2d2d2;
+  border-bottom: 1px solid #d2d2d2;
+  background-color: #eef2e0;
+  cursor: pointer;
+  height: 14px;
+  padding: 8px 16px;
+}
+
+.ode-CollapsablePanel .gwt-DisclosurePanel .content {
+  padding: 8px 4px 8px 8px;
+  background-color: white;
+  border: 1px solid #bbbbbb;
+  border-bottom: 0px;
+  margin-left: 0px;
+}
+
+.ode-CollapsablePanel .gwt-DisclosurePanel img {
+  margin-top: 0px;
+}
+
 .gwt-StackPanelItem div {
   font-size: 13px;
   cursor: pointer;
@@ -729,11 +856,32 @@ div.StatusPanel {
 .gwt-StackPanel .gwt-StackPanelContent {
   padding: 8px 4px 8px 8px;
 }
+
 .gwt-StackPanel .gwt-StackPanelItem {
   padding: 0;
   border: 0;
+  background: unset;
+  border-bottom: 1px solid #bbbbbb;
 }
 
+.gwt-StackPanel .gwt-StackPanelContent {
+  border: 0;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+.gwt-DecoratedStackPanel .gwt-StackPanelItem-first .stackItemTopRight,
+.gwt-DecoratedStackPanel .gwt-StackPanelItem-first .stackItemTopLeft {
+  border: 1px;
+  border-radius: 4px;
+}
+
+.gwt-Tree table td:first-child {
+  width: unset;
+}
+
+.gwt-Tree .gwt-TreeItem {
+  cursor: pointer;
+}
 
 .ode-SimplePaletteItem {
   height: 15px;
@@ -840,6 +988,7 @@ div.StatusPanel {
   min-width: 150px;
   font-size: small;
   padding: 2px;
+  z-index: 1000;
 }
 
 .ode-ColorChoicePropertyEditor {
@@ -1089,12 +1238,20 @@ path.ode-SimpleMockMapFeature-selected {
 
 .ode-ComponentHelpPopup-Body {
   padding: 10px;
+  color: #555;
   font-size: 12px;
+  width: 250px;
 }
 
 .ode-ComponentHelpPopup-Link {
   padding: 0 10px 10px 10px;
   font-size: 12px;  
+  padding: 0 10px 10px 0;
+  font-size: 12px;
+
+}
+.ode-ComponentHelpPopup-Link a {
+  color: #8fc202;
 }
 
 
@@ -1268,12 +1425,87 @@ path.ode-SimpleMockMapFeature-selected {
 
 /* End of NoProjectsDialogBox. */
 
+/* Start Of ProjectPropertiesDialogBox. */
+.ode-propertyDialogContainer  {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.ode-projectPropertyCategoryTitlePanel {
+  margin-top: 18px;
+  width: 180px;
+  border-radius: 0px;
+  border: 0px;
+  border-right: 2px solid black;
+  padding-right: 20px;
+  outline: none;
+  overflow: auto;
+}
+
+.ode-propertyDialogPropertiesScrollPanel {
+  height: 400px;
+  width: 600px;
+  padding-bottom: 40px;
+  padding-right: 30px;
+}
+
+.ode-propertyDialogPropertyContainer {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+}
+
+.ode-propertyDialogPropertyTitle {
+  font-size: 16px;
+  font-weight: bold;
+  color: #413f3f;
+  margin-top: 18px;
+}
+
+.ode-propertyDialogPropertyDescription {
+  font-size: 14px;
+  font-weight: 400;
+  color: #797575;
+  margin-top: 18px;
+}
+
+.ode-propertyDialogPropertyEditor {
+  min-height: 30px;
+  height: 10%;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.ode-projectPropertyCategoryTitlePanel option { 
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.ode-projectPropertyCategoryTitlePanel:focus  { 
+  outline: none;
+}
+
+.ode-propertyDialogVerticalPanel {
+  display: flex;
+  flex-flow: column;
+}
+
+/* End of Project ProjectPropertiesDialogBox. */
+
 .ode-DialogBox {
   z-index: 1000;
   min-width: 340px;
   min-height: 40px;
 }
 
+
+  min-height: 40px;
+}
+
+.DialogBox-message {}
 .ode-DialogBox .gwt-CheckBox {
   font-size: 12px;
 }
@@ -1302,6 +1534,29 @@ path.ode-SimpleMockMapFeature-selected {
   padding-left: 4px;
 }
 
+.ode-DialogRow {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+}
+
+ .ode-DialogRow .gwt-Label {
+   color: #000;
+   font-weight: 500;
+   font-size: 1.2em;
+   padding-bottom: 2px;
+   text-shadow: none;
+ }
+
+.ode-DialogRow .gwt-RadioButton input[type="radio"] {
+  margin-right: 5px;
+}
+
+.ode-DialogBox .dialogTop {
+  background-color: #8fc202;
+}
+
 .ode-DialogBox .Caption {
   font-weight: bold;
   font-size: 13px;
@@ -1313,7 +1568,7 @@ path.ode-SimpleMockMapFeature-selected {
 }
 
 .ode-DialogBox .dialogContent td {
-  padding: 2px 10px;
+  padding: 2px 2px;
   font-size: 12px;
 }
 
@@ -1321,18 +1576,31 @@ path.ode-SimpleMockMapFeature-selected {
   margin: 10px;
 }
 
-.ode-DialogBox table {
-  width: 100%;
-}
-
 .ode-DialogBox .ode-LabeledTextBox {
   margin-bottom: 0;
+  padding: 5px 10px;
 }
 
 .ode-DialogBox .buttonRow {
   display: inline-flex;
   justify-content: space-around ;
   width: 95%;
+  margin-top:10px;
+}
+
+.ode-DialogBox .contentRow {
+  display: inline-flex;
+  width: 95%;
+  margin-left: 20px;
+  padding-bottom: 10px;
+}
+
+.ode-DialogBox .contentImage {
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: inset;
+  border-color: lightgray;
+  box-shadow: 0 0 2px #aaa;
 }
 
 /* AI2 Extensions Styles */
@@ -2466,7 +2734,7 @@ div.dropdiv p {
 }
 
 .download-button {
-  display: grid;
+  display: grid !important;
   max-width: 130px;
   margin: 0 !important;
   margin-top: 12px !important;
@@ -2489,8 +2757,24 @@ div.dropdiv p {
     top: 40px;
     left: 50%;
     display: block;
+
+.classic .download-barcode:before {
+  content: "";
+  background-color: #888;
+  position: absolute;
+  width: 1px;
+  height: 160px;
+  top: 40px;
+  left: 50%;
+  display: block;
 }
 
 .listItem:nth-child(2n + 0) {
   background: rgba(200, 200, 200, 0.1);
+}
+
+.components-tree-filter {
+  margin-top: 1px;
+  margin-left: 1px;
+  font-size: 11px;
 }

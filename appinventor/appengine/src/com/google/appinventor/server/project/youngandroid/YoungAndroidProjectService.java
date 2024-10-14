@@ -17,6 +17,7 @@ import com.google.appinventor.server.FileExporterImpl;
 import com.google.appinventor.server.FileImporter;
 import com.google.appinventor.server.FileImporterException;
 import com.google.appinventor.server.FileImporterImpl;
+import com.google.appinventor.server.GalleryExtensionException;
 import com.google.appinventor.server.Server;
 import com.google.appinventor.server.encryption.EncryptionException;
 import com.google.appinventor.server.flags.Flag;
@@ -26,6 +27,7 @@ import com.google.appinventor.server.properties.json.ServerJsonParser;
 import com.google.appinventor.server.storage.StorageIo;
 import com.google.appinventor.server.util.UriBuilder;
 import com.google.appinventor.shared.properties.json.JSONParser;
+import com.google.appinventor.shared.properties.json.JSONUtil;
 import com.google.appinventor.shared.rpc.RpcResult;
 import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.appinventor.shared.rpc.project.NewProjectParameters;
@@ -169,6 +171,10 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\"}}\n|#";
   }
 
+//<<<<<<< zamanova-ui-redesign
+//
+  //when new project is created, checks for theme and toolkit
+//>>>>>>> master
   public static String getInitialFormPropertiesFileContents(String qualifiedName, NewYoungAndroidProjectParameters youngAndroidParams) {
     final int lastDotPos = qualifiedName.lastIndexOf('.');
     String packageName = qualifiedName.split("\\.")[2];
@@ -183,14 +189,22 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         "\"$Version\":\"" + YaVersion.FORM_COMPONENT_VERSION + "\",\"Uuid\":\"" + 0 + "\"," +
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\",\"Theme\":\"" + 
         themeName + "\"}}\n|#";
-    if (blocksToolkit.length() >= 1){
+//<<<<<<< zamanova-ui-redesign
+    //if (blocksToolkit.length() >= 1){
+//=======
+    if (!blocksToolkit.isEmpty()){
+//>>>>>>> master
         newString = "#|\n$JSON\n" +
         "{\"authURL\":[]," +
         "\"YaVersion\":\"" + YaVersion.YOUNG_ANDROID_VERSION + "\",\"Source\":\"Form\"," +
         "\"Properties\":{\"$Name\":\"" + formName + "\",\"$Type\":\"Form\"," +
         "\"$Version\":\"" + YaVersion.FORM_COMPONENT_VERSION + "\",\"Uuid\":\"" + 0 + "\"," +
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\",\"Theme\":\"" + 
-        themeName +  "\",\"BlocksToolkit\":" + blocksToolkit +"}}\n|#";
+//<<<<<<< zamanova-ui-redesign
+        //themeName +  "\",\"BlocksToolkit\":" + blocksToolkit +"}}\n|#";
+//=======
+        themeName +  "\",\"BlocksToolkit\":" + JSONUtil.toJson(blocksToolkit) +"}}\n|#";
+// master
     }
     return newString;
   }
@@ -282,6 +296,7 @@ public final class YoungAndroidProjectService extends CommonProjectService {
     // Create new project
     return storageIo.createProject(userId, project, builder.build());
   }
+
 
   @Override
   public long copyProject(String userId, long oldProjectId, String newName) {
@@ -479,20 +494,6 @@ public final class YoungAndroidProjectService extends CommonProjectService {
   }
 
   /**
-   * Renames several projects.
-   *
-   * @param userId the user id
-   * @param projectIds IDs of projects to be renamed
-   * @param projectNames new project names
-   */
-	@Override
-  public void renameProjects(String userId, List<Long> projectIds, List<String> projectNames) {
-    for (int i = 0; i < projectIds.size(); ++i) {
-      storageIo.setProjectName(userId, projectIds.get(i), projectNames.get(i));
-    }
-  }
-
-  /**
    * Constructs a RpcResult object that indicates that a file was too big to send.
    *
    * @param size size of the aia
@@ -526,22 +527,6 @@ public final class YoungAndroidProjectService extends CommonProjectService {
 
     storageIo.storeNonce(nonce, userId, projectId);
     List<String> buildOutputFiles = storageIo.getProjectOutputFiles(userId, projectId);
-    if (storageIo.getProjectDateBuilt(userId, projectId) > storageIo.getProjectDateModified(userId, projectId)) {
-      boolean isAabOutput = false;
-      for (String buildOutputFile : buildOutputFiles) {
-        if (buildOutputFile.endsWith(".aab")) {
-          isAabOutput = true;
-          break;
-        }
-      }
-
-      if (isAabOutput && isAab || !isAabOutput && !isAab) {
-        LOG.info("Cache hit for project " + projectId);
-        return new RpcResult(-2, "Cache hit for project " + projectId, "");
-      }
-    }
-    LOG.info("Cache expired for project " + projectId);
-    storageIo.updateProjectBuiltDate(userId, projectId, 0);
 
     // Delete the existing build output files, if any, so that future attempts to get it won't get
     // old versions.
@@ -732,6 +717,8 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         String returl = readContent(connection.getInputStream()); // Need to drain any response
         return new RpcResult(0, returl, "");
       }
+    } catch (GalleryExtensionException e) {
+      return new RpcResult(RpcResult.GALLERY_HAS_EXTENSION, "", "");
     } catch (Exception e) {
       throw CrashReport.createAndLogError(LOG, null, e.getMessage(), e);
     }
