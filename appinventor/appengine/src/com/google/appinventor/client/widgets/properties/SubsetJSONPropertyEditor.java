@@ -14,6 +14,7 @@ import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.explorer.project.ProjectChangeListener;
 import com.google.appinventor.client.widgets.DropDownButton;
 import com.google.appinventor.client.widgets.DropDownItem;
+import com.google.appinventor.client.wizards.youngandroid.NewYoungAndroidProjectWizard;
 import com.google.appinventor.client.youngandroid.TextValidators;
 import com.google.appinventor.common.utils.StringUtils;
 import com.google.appinventor.components.common.ComponentCategory;
@@ -63,10 +64,29 @@ import java.util.Set;
 
 import java.util.logging.Logger;
 
+//<<<<<<< zamanova-ui-redesign
+interface BeginnerToolkit extends ClientBundle {
+  BeginnerToolkit INSTANCE = GWT.create(BeginnerToolkit.class);
+
+  @Source("toolkit_beginner.json")
+  TextResource getToolkit();
+}
+
+interface IntermediateToolkit extends ClientBundle {
+  IntermediateToolkit INSTANCE = GWT.create(IntermediateToolkit.class);
+
+  @Source("toolkit_intermediate.json")
+  TextResource getToolkit();
+}
+
+//=======
+//>>>>>>> master
 public class SubsetJSONPropertyEditor  extends PropertyEditor
         implements ProjectChangeListener {
 
   private static final Logger LOG = Logger.getLogger(Ode.class.getName());
+//<<<<<<< zamanova-ui-redesign
+//=======
 
   interface BeginnerToolkit extends ClientBundle {
     BeginnerToolkit INSTANCE = GWT.create(BeginnerToolkit.class);
@@ -82,6 +102,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
     TextResource getToolkit();
   }
 
+//>>>>>>> master
   private static SubsetJSONPropertyEditor INSTANCE;
 
   Tree componentTree;
@@ -92,10 +113,14 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
   boolean customPopupShowing = false;
 
   public SubsetJSONPropertyEditor() {
+//<<<<<<< zamanova-ui-redesign
+    Boolean newProject = Ode.getInstance().isProjectLoaded();
+//=======
     this(false);
   }
 
   public SubsetJSONPropertyEditor(boolean newProject) {
+//>>>>>>> master
     buildTrees();
     file.addChangeHandler(new ChangeHandler() {
       @Override
@@ -119,6 +144,25 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
       @Override
       public void execute() {
         property.setValue(BeginnerToolkit.INSTANCE.getToolkit().getText());
+//<<<<<<< zamanova-ui-redesign
+        updateValue();
+      }}));
+
+    items.add(new DropDownItem("Subset Property Editor", MESSAGES.intermediateToolkitButton(), new Command() {
+      @Override
+      public void execute() {
+        property.setValue(IntermediateToolkit.INSTANCE.getToolkit().getText());
+        updateValue();
+      }}));
+
+    items.add(new DropDownItem("Subset Property Editor", MESSAGES.expertToolkitButton(), new Command() {
+      @Override
+      public void execute() {
+        property.setValue("");
+        updateValue();
+      }}));
+    if (newProject){
+//=======
         updateValue();
       }}));
 
@@ -136,17 +180,23 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
         updateValue();
       }}));
     if (!newProject) {
+//>>>>>>> master
       items.add(new DropDownItem("Subset Property Editor", MESSAGES.matchProjectButton(), new Command() {
         @Override
         public void execute() {
           matchProject();
           property.setValue(createJSONString());
           updateValue();
+//<<<<<<< zamanova-ui-redesign
+        }}));  
+    }
+//=======
         }
       }));
     }
     /*
      Temporarily turning this off until we can determine why file.click() is not doing anything.
+//>>>>>>> master
     items.add(new DropDownItem("Subset Property Editor", MESSAGES.fileUploadWizardCaption(), new Command() {
       @Override
       public void execute() {
@@ -311,8 +361,8 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
     // Build tree of global blocks by category
     JSONObject blockDict = new JSONObject(getBlockDict());
     for (String blockCategory:blockDict.keySet()) {
-
       // There appears to be no centralized method for internationalizing the built-in block category names.
+
       // Fix if I'm wrong.
       String blockCategoryTranslated;
       if (blockCategory.equals("Control")) {
@@ -640,9 +690,15 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
   }
 
   protected void updateValue() {
+//<<<<<<< zamanova-ui-redesign
+    LOG.info("Comparing " + property.getValue() + " to " + BeginnerToolkit.INSTANCE.getToolkit().getText());
+    if (StringUtils.isNullOrEmpty(property.getValue())) {
+      dropDownButton.setCaption(MESSAGES.expertToolkitButton());
+//=======
     LOG.info(property.getValue());
     if (StringUtils.isNullOrEmpty(property.getValue())) {
       dropDownButton.setCaption(MESSAGES.defaultText());
+//>>>>>>> master
       dropDownButton.setWidth("");
     } else if (Objects.equals(property.getValue().replaceAll("\\s+",""), BeginnerToolkit.INSTANCE.getToolkit().getText().replaceAll("\\s+",""))){
       dropDownButton.setCaption(MESSAGES.beginnerToolkitButton());

@@ -9,6 +9,8 @@ import com.google.appinventor.client.widgets.properties.ChoicePropertyEditor;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 
+import com.google.appinventor.client.Ode;
+
 /**
  * Property editor for text alignment.
  */
@@ -23,10 +25,14 @@ public class YoungAndroidThemeChoicePropertyEditor extends ChoicePropertyEditor 
   };
 
   public YoungAndroidThemeChoicePropertyEditor() {
+//<<<<<<< zamanova-ui-redesign
+    super(textAlignments, false);
+//=======
     super(themes);
   }
 
   public YoungAndroidThemeChoicePropertyEditor(String defaultValue) {
     super(themes, defaultValue, true);
+//>>>>>>> master
   }
 }

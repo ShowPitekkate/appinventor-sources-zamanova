@@ -2,6 +2,7 @@
 <!-- Copyright 2024 MIT, All rights reserved -->
 <!-- Released under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+ter
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:w="urn:import:com.google.appinventor.client.widgets"
@@ -14,10 +15,15 @@
     <g:FlowPanel>
       <g:HTML ui:field="errorMessage" />
       <g:FlowPanel styleName="buttonRow" >
+        <g:Button ui:field='infoButton' text='{messages.aiaMediaAssetHelp}' visible="false"  />
+        <g:Button ui:field='cancelButton' text='{messages.cancelButton}'  />
+        <g:Button ui:field='okButton' text='{messages.okButton}' />
+
         <g:Button ui:field='infoButton' text='{messages.aiaMediaAssetHelp}' visible="false"
                   styleName="ode-ProjectListButton"  />
         <g:Button ui:field='cancelButton' text='{messages.cancelButton}'  styleName="ode-ProjectListButton" />
         <g:Button ui:field='okButton' text='{messages.okButton}' styleName="ode-ProjectListButton" />
+
       </g:FlowPanel>
     </g:FlowPanel>
   </wiz:Dialog>

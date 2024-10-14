@@ -171,7 +171,10 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\"}}\n|#";
   }
 
+//<<<<<<< zamanova-ui-redesign
+//
   //when new project is created, checks for theme and toolkit
+//>>>>>>> master
   public static String getInitialFormPropertiesFileContents(String qualifiedName, NewYoungAndroidProjectParameters youngAndroidParams) {
     final int lastDotPos = qualifiedName.lastIndexOf('.');
     String packageName = qualifiedName.split("\\.")[2];
@@ -186,14 +189,22 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         "\"$Version\":\"" + YaVersion.FORM_COMPONENT_VERSION + "\",\"Uuid\":\"" + 0 + "\"," +
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\",\"Theme\":\"" + 
         themeName + "\"}}\n|#";
+//<<<<<<< zamanova-ui-redesign
+    //if (blocksToolkit.length() >= 1){
+//=======
     if (!blocksToolkit.isEmpty()){
+//>>>>>>> master
         newString = "#|\n$JSON\n" +
         "{\"authURL\":[]," +
         "\"YaVersion\":\"" + YaVersion.YOUNG_ANDROID_VERSION + "\",\"Source\":\"Form\"," +
         "\"Properties\":{\"$Name\":\"" + formName + "\",\"$Type\":\"Form\"," +
         "\"$Version\":\"" + YaVersion.FORM_COMPONENT_VERSION + "\",\"Uuid\":\"" + 0 + "\"," +
         "\"Title\":\"" + formName + "\",\"AppName\":\"" + packageName +"\",\"Theme\":\"" + 
+//<<<<<<< zamanova-ui-redesign
+        //themeName +  "\",\"BlocksToolkit\":" + blocksToolkit +"}}\n|#";
+//=======
         themeName +  "\",\"BlocksToolkit\":" + JSONUtil.toJson(blocksToolkit) +"}}\n|#";
+// master
     }
     return newString;
   }

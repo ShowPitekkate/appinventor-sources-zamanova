@@ -166,4 +166,12 @@ public final class MockCheckBox extends MockToggleBase<HorizontalPanel> {
       refreshForm();
     }
   }
+//<<<<<<< zamanova-ui-redesign
+
+  @Override
+  protected void setContainer(MockContainer container) {
+    super.setContainer(container);
+  }
+//=======
+//>>>>>>> master
 }

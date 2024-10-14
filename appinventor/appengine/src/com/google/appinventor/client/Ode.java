@@ -6,11 +6,16 @@
 
 package com.google.appinventor.client;
 
+//zamanova-ui-redesign
+import com.google.appinventor.client.actions.DisableAutoloadAction;
+import com.google.appinventor.client.actions.EnableAutoloadAction;
+//
 import static com.google.appinventor.client.utils.Promise.reject;
 import static com.google.appinventor.client.utils.Promise.rejectWithReason;
 import static com.google.appinventor.client.utils.Promise.resolve;
 import static com.google.appinventor.client.wizards.TemplateUploadWizard.TEMPLATES_ROOT_DIRECTORY;
 
+//master
 import com.google.appinventor.client.boxes.AssetListBox;
 import com.google.appinventor.client.boxes.PaletteBox;
 import com.google.appinventor.client.boxes.ProjectListBox;
@@ -44,10 +49,16 @@ import com.google.appinventor.client.style.neo.UiFactoryNeo;
 import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.client.utils.HTML5DragDrop;
 import com.google.appinventor.client.utils.PZAwarePositionCallback;
+//zamanova-ui-redesign
+import com.google.appinventor.client.widgets.DropDownButton;
+import com.google.appinventor.client.widgets.boxes.WorkAreaPanel;
+import com.google.appinventor.client.widgets.properties.EditableProperty;
+//=======
 import com.google.appinventor.client.utils.Promise;
 import com.google.appinventor.client.utils.Promise.RejectCallback;
 import com.google.appinventor.client.utils.Promise.ResolveCallback;
 import com.google.appinventor.client.utils.Urls;
+//master
 import com.google.appinventor.client.widgets.ExpiredServiceOverlay;
 
 import com.google.appinventor.client.widgets.boxes.WorkAreaPanel;
@@ -79,6 +90,7 @@ import com.google.appinventor.shared.rpc.user.UserInfoServiceAsync;
 import com.google.appinventor.shared.settings.SettingsConstants;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -91,6 +103,11 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+//zamanova-ui-redesign
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.uibinder.client.UiBinder;
+//=======
+//master
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -117,6 +134,12 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+//zamanova-ui-redesign
+
+import com.google.gwt.dom.client.Style;
+
+//=======
+//master
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -193,6 +216,8 @@ public class Ode implements EntryPoint {
 
   private DropTargetProvider dragDropTargets;
 
+  private DropTargetProvider dragDropTargets;
+
   // Remembers the current View
   public static final int DESIGNER = 0;
   public static final int PROJECTS = 1;
@@ -215,9 +240,19 @@ public class Ode implements EntryPoint {
    *  |+-------------------------------------------+|
    *  +---------------------------------------------+
    */
-  @UiField(provided = true) protected DeckPanel deckPanel;
-  @UiField(provided = true) protected FlowPanel overDeckPanel;
-  @UiField protected TutorialPanel tutorialPanel;
+//zamanova-ui-redesign
+  @UiField(provided = true) DeckPanel deckPanel;
+  @UiField(provided = true) FlowPanel overDeckPanel;
+  @UiField TutorialPanel tutorialPanel;
+  @UiField FlowPanel toolkitEditor;
+  @UiField Label blocksLabel;
+  @UiField FlowPanel helpToolkit;
+
+//=======
+  //@UiField(provided = true) protected DeckPanel deckPanel;
+  //@UiField(provided = true) protected FlowPanel overDeckPanel;
+  //@UiField protected TutorialPanel tutorialPanel;
+//>>>>>>> master
   private int projectsTabIndex;
   private int designTabIndex;
   private int debuggingTabIndex;
@@ -399,6 +434,11 @@ public class Ode implements EntryPoint {
     return overDeckPanel;
   }
 
+  public void addPropertyToDesigner(EditableProperty property) {
+    toolkitEditor.clear();
+    toolkitEditor.add(property.getEditor());
+  }
+
   /**
    * Switch to the Projects tab
    */
@@ -418,12 +458,12 @@ public class Ode implements EntryPoint {
           // a second press while the new project wizard was starting (aka we "debounce"
           // the button). When the person switches to the projects list view again (here)
           // we re-enable it.
-          projectToolbar.enableStartButton();
-          projectToolbar.setProjectTabButtonsVisible(true);
-          projectToolbar.setTrashTabButtonsVisible(false);
+          bindProjectToolbar.enableStartButton();
+          bindProjectToolbar.setProjectTabButtonsVisible(true);
+          bindProjectToolbar.setTrashTabButtonsVisible(false);
         }
       };
-    if (designToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
+    if (bindDesignToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
       next.run();
     } else {
       // maybe take a screenshot, second argument is true so we wait for i/o to complete
@@ -490,6 +530,10 @@ public class Ode implements EntryPoint {
     }
   }
 
+  public void refreshProperties()
+  {
+    bindPropertiesBox.show((YaFormEditor) currentFileEditor, true);
+  }
   /**
    * Switch to the Debugging tab
    */
@@ -614,7 +658,11 @@ public class Ode implements EntryPoint {
         History.newItem(projectIdString, false);
       }
       assetManager.loadAssets(project.getProjectId());
+//<<<<<<< zamanova-ui-redesign
+      bindAssetListBox.getAssetList().refreshAssetList(project.getProjectId());
+//=======
       assetListBox.getAssetList().refreshAssetList(project.getProjectId());
+//>>>>>>> master
     }
     getTopToolbar().updateFileMenuButtons(1);
   }
@@ -974,6 +1022,12 @@ public class Ode implements EntryPoint {
     };
     deckPanel.sinkEvents(Event.ONCONTEXTMENU);
 
+//zamanova-ui-redesign
+    OdeUiBinder uiBinder = GWT.create(OdeUiBinder.class);
+    style = Ode.getUserDarkThemeEnabled() ? Resources.INSTANCE.styleDark() : Resources.INSTANCE.styleLight();
+    style.ensureInjected();
+    FlowPanel mainPanel = uiBinder.createAndBindUi(this);
+//=======
     // TODO: Tidy up user preference variable
     projectListbox = ProjectListBox.create(uiFactory);
     String layout;
@@ -995,6 +1049,9 @@ public class Ode implements EntryPoint {
 
     style.ensureInjected();
     FlowPanel mainPanel = uiFactory.createOde(this, layout);
+//>>>>>>> master
+
+    deckPanel.showWidget(0);
 
     deckPanel.showWidget(0);
     if ((mayNeedSplash || shouldShowWelcomeDialog()) && !didShowSplash) {
@@ -1106,8 +1163,8 @@ public class Ode implements EntryPoint {
    *
    * @return  {@link ProjectToolbar}
    */
-  public ProjectToolbar getProjectToolbar() {
-    return projectToolbar;
+  public ProjectToolbar getBindProjectToolbar() {
+    return bindProjectToolbar;
   }
 
   /**
@@ -1134,7 +1191,7 @@ public class Ode implements EntryPoint {
    * @return  {@link DesignToolbar}
    */
   public DesignToolbar getDesignToolbar() {
-    return designToolbar;
+    return bindDesignToolbar;
   }
 
   /**
@@ -1234,11 +1291,24 @@ public class Ode implements EntryPoint {
     }
   }
 
+  public void refreshSourceStructure() {
+    bindSourceStructureBox.show((YaFormEditor) currentFileEditor);
+  }
+
   /**
    * @return  currently open FileEditor, or null if none
    */
   public FileEditor getCurrentFileEditor() {
     return currentFileEditor;
+  }
+
+  //need to check whether currentFileEditor should be null
+  public Boolean isProjectLoaded(){
+    if (currentFileEditor == null){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   /**
@@ -1321,7 +1391,7 @@ public class Ode implements EntryPoint {
    * HideChaff when switching view from block to others
    */
   private void hideChaff() {
-    if (designToolbar.getCurrentView() == DesignToolbar.View.BLOCKS
+    if (bindDesignToolbar.getCurrentView() == DesignToolbar.View.BLOCKS
         // currentFileEditor may be null when switching projects
         && currentFileEditor != null) {
       currentFileEditor.hideChaff();
@@ -1351,6 +1421,76 @@ public class Ode implements EntryPoint {
         @Override
         public void execute() {
           // Reload for the new font to take effect. We
+          // do this here because we need to make sure that
+          // the user settings were saved before we terminate
+          // this browsing session. This is particularly important
+          // for Firefox
+          Window.Location.reload();
+        }
+      });
+  }
+
+  
+  /**
+   * Returns the dark theme setting.
+   *
+   * @return true if the user has opted to use a dark theme, false otherwise
+   */
+  public static boolean getUserDarkThemeEnabled() {
+    String value = userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            getPropertyValue(SettingsConstants.DARK_THEME_ENABLED);
+    if (value == null){
+      return false;
+    }
+    return Boolean.parseBoolean(value);
+  }
+
+  /**
+   * Set user dark theme setting.
+   *
+   * @param enabled new value for the user's UI preference
+   */
+  public static void setUserDarkThemeEnabled(boolean enabled) {
+    userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            changePropertyValue(SettingsConstants.DARK_THEME_ENABLED,
+                    "" + enabled);
+    userSettings.saveSettings(new Command() {
+        @Override
+        public void execute() {
+          // Reload for the UI preferences to take effect. We
+          // do this here because we need to make sure that
+          // the user settings were saved before we terminate
+          // this browsing session. This is particularly important
+          // for Firefox
+          Window.Location.reload();
+        }
+      });
+  }
+
+  /**
+   * Returns user new layout usage setting.
+   *
+   * @return true if the user has opted to use the new UI, false otherwise
+   */
+  public static boolean getUserNewLayout() {
+    String value = userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            getPropertyValue(SettingsConstants.USER_NEW_LAYOUT);
+    return Boolean.parseBoolean(value);
+  }
+
+  /**
+   * Set user new layout usage setting.
+   *
+   * @param newLayout new value for the user's UI preference
+   */
+  public static void setUserNewLayout(boolean newLayout) {
+    userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+            changePropertyValue(SettingsConstants.USER_NEW_LAYOUT,
+                    "" + newLayout);
+    userSettings.saveSettings(new Command() {
+        @Override
+        public void execute() {
+          // Reload for the UI preferences to take effect. We
           // do this here because we need to make sure that
           // the user settings were saved before we terminate
           // this browsing session. This is particularly important
@@ -2335,7 +2475,7 @@ public class Ode implements EntryPoint {
     }
     // If we are not in the blocks editor, we do nothing
     // but we do run our callback
-    if (designToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
+    if (bindDesignToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
       next.run();
       return;
     }
@@ -2427,22 +2567,9 @@ public class Ode implements EntryPoint {
   }
 
   public void setTutorialURL(String newURL) {
-    if (newURL.isEmpty()) {
-      designToolbar.setTutorialToggleVisible(false);
-      setTutorialVisible(false);
-      return;
-    }
-
-    boolean isUrlAllowed = false;
-    for (String candidate : config.getTutorialsUrlAllowed()) {
-      if (newURL.startsWith(candidate)) {
-        isUrlAllowed = true;
-        break;
-      }
-    }
-
-    if (!isUrlAllowed) {
-      designToolbar.setTutorialToggleVisible(false);
+    if (newURL.isEmpty() || (!newURL.startsWith("http://appinventor.mit.edu/")
+        && !newURL.startsWith("http://appinv.us/"))) {
+      bindDesignToolbar.setTutorialToggleVisible(false);
       setTutorialVisible(false);
     } else {
       String locale = Window.Location.getParameter("locale");
@@ -2453,7 +2580,7 @@ public class Ode implements EntryPoint {
       boolean isHttps = Window.Location.getProtocol() == "https:" || urlSplits[0] == "https:";
       String effectiveUrl = (isHttps ? "https://" : "http://") + urlSplits[1];
       tutorialPanel.setUrl(effectiveUrl);
-      designToolbar.setTutorialToggleVisible(true);
+      bindDesignToolbar.setTutorialToggleVisible(true);
       setTutorialVisible(true);
     }
   }
@@ -2585,6 +2712,26 @@ public class Ode implements EntryPoint {
       top.proxy.close();
     }
   }-*/;
+//<<<<<<< zamanova-ui-redesign
+  public interface Resources extends ClientBundle {
+
+    public static final Resources INSTANCE =  GWT.create(Resources.class);
+
+    @Source({
+      "com/google/appinventor/client/light.css",
+      "com/google/appinventor/client/Ya.css"
+    })
+    Style styleLight();
+
+    @Source({
+      "com/google/appinventor/client/dark.css",
+      "com/google/appinventor/client/Ya.css"
+    })
+    Style styleDark();
+    public interface Style extends CssResource {
+    }
+  }
+//=======
 
   public interface Resources extends ClientBundle {
 
@@ -2620,4 +2767,5 @@ public class Ode implements EntryPoint {
     $wnd.ALLOWED_IOS_EXTENSIONS = JSON.parse(extensionJson);
   }-*/;
 
+//>>>>>>> master
 }

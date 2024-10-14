@@ -14,7 +14,7 @@
 
 /* Greys */
 @def background-color                   #111;
-@def top-panel-background-color         #222;
+@def top-panel-background-color         #111;
 @def top-panel-background-image         #333;
 @def border-color                       #555;
 @def label-color                        #ddd;
@@ -36,4 +36,5 @@
 @def project-color                      #112abb;
     /* red */
 @def destructive-action-hover           #FF6666;
+@def item-color-red                     #ff0000;
 @def item-color-red                     #ff0000;

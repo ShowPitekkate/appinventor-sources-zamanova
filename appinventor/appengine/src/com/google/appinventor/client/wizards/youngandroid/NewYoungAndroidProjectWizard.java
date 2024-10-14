@@ -10,28 +10,38 @@ package com.google.appinventor.client.wizards.youngandroid;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import static com.google.appinventor.components.common.ComponentConstants.DEFAULT_THEME;
 
+// zamanova-ui-redesign
+import static com.google.appinventor.client.Ode.MESSAGES;
+
+import com.google.appinventor.client.components.FolderTreeItem;
+//=======
 import com.google.appinventor.client.ComponentsTranslation;
 import com.google.appinventor.client.Ode;
+//>>>>>>> master
 import com.google.appinventor.client.editor.youngandroid.properties.YoungAndroidThemeChoicePropertyEditor;
 import com.google.appinventor.client.wizards.Dialog;
+import com.google.appinventor.client.wizards.NewFolderWizard;
 import com.google.gwt.core.client.GWT;
 import com.google.appinventor.client.widgets.Validator;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Button;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.tracking.Tracking;
+import com.google.appinventor.client.widgets.BlocksToolkit;
 import com.google.appinventor.client.widgets.LabeledTextBox;
+//<<<<<<< zamanova-ui-redesign
+import com.google.appinventor.client.widgets.Validator;
+import com.google.appinventor.client.widgets.properties.EditableProperties;
+import com.google.appinventor.client.widgets.properties.EditableProperty;
+//=======
 import com.google.appinventor.client.widgets.properties.EditableProperties;
 import com.google.appinventor.client.widgets.properties.EditableProperty;
 import com.google.appinventor.client.widgets.properties.PropertyHelpWidget;
+//>>>>>>> master
 import com.google.appinventor.client.widgets.properties.SubsetJSONPropertyEditor;
 import com.google.appinventor.client.wizards.NewProjectWizard;
 import com.google.appinventor.client.youngandroid.TextValidators;
@@ -39,8 +49,28 @@ import com.google.appinventor.common.utils.StringUtils;
 import com.google.appinventor.shared.rpc.project.youngandroid.NewYoungAndroidProjectParameters;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidProjectNode;
 import com.google.gwt.core.client.Scheduler;
+//<<<<<<< zamanova-ui-redesign
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.common.collect.Lists;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.user.client.Window.Location;
+//
 import com.google.gwt.user.client.ui.FlowPanel;
 
+// master
 import java.util.logging.Logger;
 
 
@@ -50,28 +80,56 @@ import java.util.logging.Logger;
  * @author markf@google.com (Mark Friedman)
  */
 
-public class NewYoungAndroidProjectWizard {
+//<<<<<<< zamanova-ui-redesign
+public final class NewYoungAndroidProjectWizard {
 
   interface NewYoungAndroidProjectWizardUiBinder extends UiBinder<Dialog, NewYoungAndroidProjectWizard> {}
-
+  private static final NewYoungAndroidProjectWizardUiBinder UI_BINDER = GWT.create(NewYoungAndroidProjectWizardUiBinder.class);
   private static final Logger LOG = Logger.getLogger(NewYoungAndroidProjectWizard.class.getName());
+
 
   EditableProperty theme;
   EditableProperty toolkit;
   // UI element for project name
-  @UiField protected Dialog addDialog;
-  @UiField protected Button addButton;
-  @UiField protected Button cancelButton;
-  @UiField protected LabeledTextBox projectNameTextBox;
+  @UiField Dialog addDialog;
+  @UiField Button addButton;
+  @UiField Button cancelButton;
+  @UiField LabeledTextBox projectNameTextBox;
+  @UiField YoungAndroidThemeChoicePropertyEditor themeEditor;
+  @UiField SubsetJSONPropertyEditor blockstoolkitEditor;
+  @UiField HorizontalPanel horizontalThemePanel;
+  @UiField HorizontalPanel horizontalBlocksPanel;
+  @UiField Label themeLabel;
+  @UiField Label blocksLabel;
+  String errorMessage = "";
+  
   @UiField(provided = true) YoungAndroidThemeChoicePropertyEditor themeEditor;
   @UiField(provided = true) SubsetJSONPropertyEditor blockstoolkitEditor;
-  @UiField protected FlowPanel horizontalThemePanel;
-  @UiField protected FlowPanel horizontalBlocksPanel;
 
+//>>>>>>> master
   /**
    * Creates a new YoungAndroid project wizard.
    */
   public NewYoungAndroidProjectWizard() {
+    //zamanova-ui-redesign
+    UI_BINDER.createAndBindUi(this);
+    addDialog.center();
+    projectNameTextBox.setFocus(true);
+
+    EditableProperties themes = new EditableProperties(false);
+    theme = new EditableProperty(themes, "theme", "Classic", "Theme", new YoungAndroidThemeChoicePropertyEditor(), 0x01, "", null);
+    themeEditor.setProperty(theme);
+
+    EditableProperties toolkits = new EditableProperties(false);
+    toolkit = new EditableProperty(toolkits, MESSAGES.blocksToolkitTitle(), "", MESSAGES.blocksToolkitTitle(), new SubsetJSONPropertyEditor(), 0x01, "", null);
+    blockstoolkitEditor.setProperty(toolkit);
+
+    horizontalThemePanel.setCellWidth(themeLabel, "40%");
+    horizontalThemePanel.setCellWidth(themeEditor, "40%");
+
+    horizontalBlocksPanel.setCellWidth(blocksLabel, "40%");
+    horizontalBlocksPanel.setCellWidth(blockstoolkitEditor, "40%");
+//
     EditableProperties themes = new EditableProperties(false);
     themeEditor = new YoungAndroidThemeChoicePropertyEditor(DEFAULT_THEME);
     theme = new EditableProperty(themes, MESSAGES.themeTitle(), DEFAULT_THEME,
@@ -89,6 +147,7 @@ public class NewYoungAndroidProjectWizard {
     blockstoolkitEditor.setProperty(toolkit);
 
     bindUI();
+//>>>>>>> master
     projectNameTextBox.setValidator(new Validator() {
       @Override
       public boolean validate(String value) {

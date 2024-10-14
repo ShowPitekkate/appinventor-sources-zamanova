@@ -57,6 +57,7 @@ public class SimpleVisibleComponentsPanel extends Composite implements DropTarge
    * @param nonVisibleComponentsPanel  corresponding panel for non-visible
    *                                   components
    */
+  
   public SimpleVisibleComponentsPanel(final SimpleEditor editor,
       SimpleNonVisibleComponentsPanel nonVisibleComponentsPanel) {
     this.nonVisibleComponentsPanel = nonVisibleComponentsPanel;

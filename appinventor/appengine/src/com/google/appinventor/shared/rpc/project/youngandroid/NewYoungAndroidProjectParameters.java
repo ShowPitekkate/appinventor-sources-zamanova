@@ -37,6 +37,18 @@ public final class NewYoungAndroidProjectParameters implements NewProjectParamet
     this.packageName = packageName;
     formName = YOUNG_ANDROID_FORM_NAME;
   }
+  public NewYoungAndroidProjectParameters(String packageName, String theme) {
+    this.packageName = packageName;
+    formName = YOUNG_ANDROID_FORM_NAME;
+    this.theme = theme;
+  }
+
+  public NewYoungAndroidProjectParameters(String packageName, String theme, String toolkit) {
+    this.packageName = packageName;
+    formName = YOUNG_ANDROID_FORM_NAME;
+    this.theme = theme;
+    this.toolkit = toolkit;
+  }
 
   public NewYoungAndroidProjectParameters(String packageName, String theme) {
     this.packageName = packageName;
@@ -74,7 +86,11 @@ public final class NewYoungAndroidProjectParameters implements NewProjectParamet
 
   public String getBlocksToolkit() {
     if (toolkit == null) {
-      return "";
+//<<<<<<< zamanova-ui-redesign
+      return "All";
+//=======
+     // return "";
+//>>>>>>> master
     }
     return toolkit;
   }

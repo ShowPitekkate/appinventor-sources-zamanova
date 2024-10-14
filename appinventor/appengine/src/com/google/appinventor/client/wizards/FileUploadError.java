@@ -3,6 +3,7 @@
 // Released under the Apache License, Version 2.0
 // http://www.apache.org/licenses/LICENSE-2.0
 
+//>>>>>>> master
 package com.google.appinventor.client.wizards;
 
 import com.google.appinventor.shared.rpc.project.FolderNode;
@@ -23,6 +24,10 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 public class  FileUploadError {
   interface FileUploadErrorUiBinder extends UiBinder<Dialog, FileUploadError> {}
 
+/// zamanova-ui-redesign
+  private final FileUploadErrorUiBinder UI_BINDER = GWT.create(FileUploadError.FileUploadErrorUiBinder.class);
+//=======
+//>>>>>>> master
   private final Logger LOG = Logger.getLogger(FileUploadError.class.getName());
 
   @UiField Dialog uploadError;
@@ -42,8 +47,12 @@ public class  FileUploadError {
     acceptableTypes = p_acceptableTypes;
     fileUploadedCallback = p_fileUploadedCallback;
 
+//<<<<<<< zamanova-ui-redesign
+    UI_BINDER.createAndBindUi(this);
+//
     FileUploadErrorUiBinder uibinder = GWT.create(FileUploadError.FileUploadErrorUiBinder.class);
     uibinder.createAndBindUi(this);
+// master
     uploadError.setText(title);
     errorMessage.setHTML(body);
 
@@ -67,7 +76,11 @@ public class  FileUploadError {
   @UiHandler("okButton")
   void okDialog(ClickEvent e) {
     uploadError.hide();
+// zamanova-ui-redesign
+    new FileUploadWizard(folderNode, acceptableTypes, fileUploadedCallback);
+//=======
     new FileUploadWizard(folderNode, acceptableTypes, fileUploadedCallback).show();
+//>>>>>>> master
   }
 
   @UiHandler("infoButton")
@@ -78,4 +91,8 @@ public class  FileUploadError {
 
 enum Error {
   AIAMEDIAASSET, NOFILESELECETED, MALFORMEDFILENAME, FILENAMEBADSIZE
+//<<<<<<< zamanova-ui-redesign
 }
+//=======
+}
+//>>>>>>> master

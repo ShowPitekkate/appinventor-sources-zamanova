@@ -219,4 +219,18 @@ public final class MockSlider extends MockVisibleComponent {
     }
 
   }
+//<<<<<<< zamanova-ui-redesign
+
+  /*
+   * We add the DesignPreviewChangeListener here instead of in the
+   * constructor because at construction time we do not have a
+   * container so getForm() fails.
+   */
+
+  @Override
+  protected void setContainer(MockContainer container) {
+    super.setContainer(container);
+  }
+//=======
+//>>>>>>> master
 }
